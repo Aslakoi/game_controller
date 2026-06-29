@@ -26,7 +26,7 @@ add-on:
 
 ```bash
 cd <ncs-workspace>/sdk-edge-ai/applications
-git clone https://github.com/<your-org>/game_controller.git
+git clone https://github.com/aslakoi/game_controller.git
 ```
 
 ## Building
