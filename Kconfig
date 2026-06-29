@@ -1,0 +1,19 @@
+#
+# Copyright (c) 2026 Nordic Semiconductor ASA
+#
+# SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
+#
+
+menu "Game controller application"
+
+config KWS_EMA_ALPHA
+	int "Exponential moving average coefficient for class probability"
+	range 0 1000
+	default 120
+	help
+	  Coefficient for new entries in exponential moving average calculation for average class
+	  probability. The value is expressed in units of 1/1000.
+
+endmenu
+
+source "Kconfig.zephyr"
