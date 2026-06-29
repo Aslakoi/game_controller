@@ -46,22 +46,32 @@ struct keyword_detection_ctx {
 };
 
 static const struct keyword_detection_ctx keyword_detection_ctxs[] = {
-	[KEYWORD_DOWN] = {.name = "Down", .threshold = 0.7f, .num_in_row = 13},
+	[KEYWORD_DOWN] = {.name = "Down", .threshold = 0.6f, .num_in_row = 13},
 	[KEYWORD_GO] = {.name = "Go", .threshold = 0.99f, .num_in_row = 22},
 	[KEYWORD_LEFT] = {.name = "Left", .threshold = 0.7f, .num_in_row = 13},
-	[KEYWORD_NO] = {.name = "No", .threshold = 0.9f, .num_in_row = 22},
-	[KEYWORD_OFF] = {.name = "Off", .threshold = 0.9f, .num_in_row = 22},
-	[KEYWORD_ON] = {.name = "On", .threshold = 0.9f, .num_in_row = 22},
+	[KEYWORD_NO] = {.name = "No", .threshold = 0.99f, .num_in_row = 22},
+	[KEYWORD_OFF] = {.name = "Off", .threshold = 0.99f, .num_in_row = 22},
+	[KEYWORD_ON] = {.name = "On", .threshold = 0.99f, .num_in_row = 22},
 	[KEYWORD_RIGHT] = {.name = "Right", .threshold = 0.7f, .num_in_row = 13},
-	[KEYWORD_SILENCE] = {.name = "Silence", .threshold = 0.9f, .num_in_row = 22},
-	[KEYWORD_STOP] = {.name = "Stop", .threshold = 0.9f, .num_in_row = 22},
-	[KEYWORD_UNKNOWN] = {.name = "Unknown", .threshold = 0.9f, .num_in_row = 22},
+	[KEYWORD_SILENCE] = {.name = "Silence", .threshold = 0.99f, .num_in_row = 22},
+	[KEYWORD_STOP] = {.name = "Stop", .threshold = 0.99f, .num_in_row = 22},
+	[KEYWORD_UNKNOWN] = {.name = "Unknown", .threshold = 0.99f, .num_in_row = 22},
 	[KEYWORD_UP] = {.name = "Up", .threshold = 0.7f, .num_in_row = 13},
-	[KEYWORD_YES] = {.name = "Yes", .threshold = 0.9f, .num_in_row = 22},
+	[KEYWORD_YES] = {.name = "Yes", .threshold = 0.99f, .num_in_row = 22},
 };
 
 BUILD_ASSERT(KEYWORDS_COUNT == ARRAY_SIZE(keyword_detection_ctxs),
 	     "Mismatch between keyword_class and keyword_detection_ctxs size");
+
+/* Directional command each keyword maps to. Keywords with no mapping default
+ * to GAME_CMD_NONE and are not sent over BLE.
+ */
+static const enum game_command keyword_commands[KEYWORDS_COUNT] = {
+	[KEYWORD_UP] = GAME_CMD_UP,
+	[KEYWORD_DOWN] = GAME_CMD_DOWN,
+	[KEYWORD_LEFT] = GAME_CMD_LEFT,
+	[KEYWORD_RIGHT] = GAME_CMD_RIGHT,
+};
 
 static nrf_edgeai_t *kws_model;
 
@@ -85,6 +95,7 @@ int kws_init(void)
 static void kws_postprocess(struct kws_prediction *const prediction)
 {
 	prediction->valid = false;
+	prediction->command = GAME_CMD_NONE;
 
 	const float alpha = CONFIG_KWS_EMA_ALPHA / 1000.0f;
 	static enum keyword_class last_class;
@@ -128,6 +139,7 @@ static void kws_postprocess(struct kws_prediction *const prediction)
 		prediction->class = predicted_class;
 		prediction->avg_probability = probability_ema;
 		prediction->name = class_ctx->name;
+		prediction->command = keyword_commands[predicted_class];
 
 		armed = false;
 		/* Skip detections to reduce double spotting. */

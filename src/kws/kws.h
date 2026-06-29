@@ -16,6 +16,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "ble/game_command.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif /* __cplusplus */
@@ -32,6 +34,8 @@ struct kws_prediction {
 	const char *name;
 	/** Average probability of multiple predictions. */
 	float avg_probability;
+	/** Directional command for this keyword, or @ref GAME_CMD_NONE. */
+	enum game_command command;
 };
 
 /**

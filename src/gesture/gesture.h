@@ -16,6 +16,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "ble/game_command.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif /* __cplusplus */
@@ -35,6 +37,8 @@ struct gesture_prediction {
 	float probability;
 	/** Class name, or NULL for invalid labels. */
 	const char *name;
+	/** Directional command for this gesture, or @ref GAME_CMD_NONE. */
+	enum game_command command;
 };
 
 /**

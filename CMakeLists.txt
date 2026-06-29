@@ -8,6 +8,8 @@ target_sources(app PRIVATE
   src/hw_modules/button.c
   src/gesture/imu/imu.c
 
+  src/ble/ble_nus.c
+
   src/engine/engine_controller.c
   src/engine/kws_engine.c
   src/engine/gesture_engine.c

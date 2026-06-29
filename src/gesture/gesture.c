@@ -42,6 +42,7 @@ int gesture_process(const float *const features, const uint16_t num_features,
 	__ASSERT_NO_MSG(prediction);
 
 	prediction->valid = false;
+	prediction->command = GAME_CMD_NONE;
 
 	nrf_edgeai_err_t err;
 
@@ -75,6 +76,18 @@ int gesture_process(const float *const features, const uint16_t num_features,
 		prediction->target = result.target;
 		prediction->probability = result.probability;
 		prediction->name = inference_get_class_name((class_label_t)result.target);
+
+		/* Only swipe gestures map to directional commands. */
+		switch (result.target) {
+		case CLASS_LABEL_SWIPE_LEFT:
+			prediction->command = GAME_CMD_LEFT;
+			break;
+		case CLASS_LABEL_SWIPE_RIGHT:
+			prediction->command = GAME_CMD_RIGHT;
+			break;
+		default:
+			break;
+		}
 	}
 
 	return 0;

@@ -12,6 +12,7 @@
 
 #include <zephyr/logging/log.h>
 
+#include "ble/ble_nus.h"
 #include "hw_modules/button.h"
 #include "engine/engine_controller.h"
 
@@ -42,6 +43,12 @@ int main(void)
 		return err;
 	}
 	button_reg_click_handler(on_button_click);
+
+	err = ble_nus_init();
+	if (err) {
+		LOG_ERR("BLE NUS init failed (err %d)", err);
+		return err;
+	}
 
 	/* 	Runs the active engine and switches between them on request
 		Function is a while loop. */

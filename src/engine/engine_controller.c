@@ -14,7 +14,6 @@
 
 LOG_MODULE_REGISTER(engine_ctrl);
 
-
 extern const engine_t kws_engine;
 extern const engine_t gesture_engine;
 

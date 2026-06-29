@@ -16,6 +16,7 @@
 #include <zephyr/logging/log.h>
 #include <zephyr/sys/atomic.h>
 
+#include "ble/ble_nus.h"
 #include "engine.h"
 #include "kws/dmic.h"
 #include "kws/kws.h"
@@ -129,6 +130,17 @@ static void kws_engine_run(atomic_t *stop)
 		if (prediction.valid) {
 			LOG_INF("Keyword: %s (class %u, prob %.2f)", prediction.name,
 				prediction.class, (double)prediction.avg_probability);
+
+			/* Low-latency control output for the serial game controller,
+			 * matching the ww_kws "Keyword spotted: X" format. printk is
+			 * synchronous (CONFIG_LOG_PRINTK=n) so it is not delayed by the
+			 * deferred log thread.
+			 */
+			printk("Keyword spotted: %s\r\n", prediction.name);
+
+			if (prediction.command != GAME_CMD_NONE) {
+				(void)ble_nus_send_command(prediction.command);
+			}
 		}
 	}
 }

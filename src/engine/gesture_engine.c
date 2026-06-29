@@ -15,6 +15,7 @@
 #include <zephyr/logging/log.h>
 #include <zephyr/sys/atomic.h>
 
+#include "ble/ble_nus.h"
 #include "engine.h"
 #include "gesture/gesture.h"
 #include "gesture/imu/imu.h"
@@ -113,6 +114,10 @@ static void gesture_engine_run(atomic_t *stop)
 		if (prediction.valid) {
 			LOG_INF("Gesture: %s (class %u, prob %.2f)", prediction.name,
 				prediction.target, (double)prediction.probability);
+
+			if (prediction.command != GAME_CMD_NONE) {
+				(void)ble_nus_send_command(prediction.command);
+			}
 		}
 	}
 }
