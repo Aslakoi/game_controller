@@ -8,3 +8,9 @@
 # If this folder is ever moved or copied, delete .venv and recreate it here.
 pygame~=2.6
 pyserial~=3.5
+# Decodes the animated GIFs on the instruction pages -- pygame.image.load()
+# returns only a GIF's first frame. See instructions.py, _load_anim().
+Pillow>=10
+# ffmpeg's decoders, for the video clips on those same pages: pygame cannot play
+# video at all. See instructions.py, _Video.
+av~=18.0

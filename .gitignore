@@ -26,3 +26,9 @@ twister-out.*/
 venv/
 __pycache__/
 *.pyc
+
+# Raw phone/camera footage for the instruction pages (tens of MB). What gets
+# committed is the small transcoded .mp4 the page actually plays -- see
+# instructions.py, _Video.
+*.mov
+*.MOV

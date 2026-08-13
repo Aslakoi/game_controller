@@ -113,12 +113,16 @@ GAMES = [
     Game("Snake (bevegelse)", snake.run, token="SNAKE_GESTURE",
          instructions=instructions.Instructions(
              lines=(
+                 "Hold brettet som i videoen under -- sveipene måles ut fra "
+                 "denne stillingen.",
                  "Styr slangen med håndbevegelser: sveip opp, ned, venstre "
                  "eller høyre for å svinge.",
                  "Spis frukten for å vokse. Treffer du veggen eller din egen "
                  "hale, er runden over.",
              ),
-             images=("head_up", "head_left", "head_right", "head_down"),
+             # The clip shows a round being played, so it does the job the four
+             # snake heads did on the voice page: no image row here.
+             animations=("snake_gesture_demo.mp4",),
              advance_hint="Trykk BTN1 for å starte",
          )),
     Game("Quiz", quiz.run, token="QUIZ", instructions=instructions.Instructions(
